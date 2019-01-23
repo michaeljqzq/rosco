@@ -148,6 +148,7 @@ class BakeryController {
   BakeStatus createBake(@PathVariable("region") String region,
                         @RequestBody BakeRequest bakeRequest,
                         @RequestParam(value = "rebake", defaultValue = "0") String rebake) {
+    log.info "[zhiqing in createBake] bakeRequest is ${bakeRequest.toString()}"
     if (!bakeRequest.cloud_provider_type) {
       bakeRequest = bakeRequest.copyWith(cloud_provider_type: defaultCloudProviderType)
     }
