@@ -87,7 +87,6 @@ public class AzureBakeHandler extends CloudProviderBakeHandler{
       azure_client_id: selectedAccount?.clientId,
       azure_client_secret: selectedAccount?.appKey,
       azure_resource_group: selectedAccount?.packerResourceGroup,
-      azure_storage_account: selectedAccount?.packerStorageAccount,
       azure_subscription_id: selectedAccount?.subscriptionId,
       azure_tenant_id: selectedAccount?.tenantId,
       azure_object_id: selectedAccount?.objectId,
@@ -98,21 +97,21 @@ public class AzureBakeHandler extends CloudProviderBakeHandler{
     ]
 
     if (bakeRequest.build_number && bakeRequest.base_name) {
-      parameterMap.azure_image_name = "$bakeRequest.build_number-$bakeRequest.base_name"
+      parameterMap.azure_managed_image_name = "$bakeRequest.build_number-$bakeRequest.base_name"
     } else if (imageName) {
-      parameterMap.azure_image_name = imageName
+      parameterMap.azure_managed_image_name = imageName
     } else {
-      parameterMap.azure_image_name = Clock.systemUTC.millis().toString()
+      parameterMap.azure_managed_image_name = Clock.systemUTC.millis().toString()
     }
 
-    // Ensure 'azure_image_name' conforms to CaptureNamePrefix regex in packer.
+    // Ensure 'azure_managed_image_name' conforms to CaptureNamePrefix regex in packer.
     // https://github.com/mitchellh/packer/blob/master/builder/azure/arm/config.go#L45
-    def azureImageName = parameterMap.azure_image_name
+    def azureImageName = parameterMap.azure_managed_image_name
     azureImageName = azureImageName.replaceAll(/[^A-Za-z0-9_\-\.]/, "")
     azureImageName = azureImageName.length() <= 23 ? azureImageName : azureImageName.substring(0, 23)
     azureImageName = azureImageName.replaceAll(/[\-\.]+$/, "")
 
-    parameterMap.azure_image_name = azureImageName
+    parameterMap.azure_managed_image_name = azureImageName
 
     if (appVersionStr) {
       parameterMap.appversion = appVersionStr
