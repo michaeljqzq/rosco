@@ -22,12 +22,14 @@ import com.netflix.spinnaker.rosco.api.BakeRequest
 import com.netflix.spinnaker.rosco.providers.CloudProviderBakeHandler
 import com.netflix.spinnaker.rosco.providers.azure.config.RoscoAzureConfiguration
 import com.netflix.spinnaker.rosco.providers.util.ImageNameFactory
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import java.time.Clock
 
 @Component
+@Slf4j
 public class AzureBakeHandler extends CloudProviderBakeHandler{
 
   private static final String IMAGE_NAME_TOKEN = "OSDiskUri:"
@@ -96,6 +98,7 @@ public class AzureBakeHandler extends CloudProviderBakeHandler{
       azure_image_sku: selectedImage?.baseImage?.sku
     ]
 
+    log.info "[zhiqing buildParameterMap] bakeRequest=${bakeRequest.dump()}"
     if (bakeRequest.build_number && bakeRequest.base_name) {
       parameterMap.azure_managed_image_name = "$bakeRequest.build_number-$bakeRequest.base_name"
     } else if (imageName) {
