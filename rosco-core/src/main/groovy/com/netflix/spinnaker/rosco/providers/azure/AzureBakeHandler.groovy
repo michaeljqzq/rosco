@@ -111,7 +111,7 @@ public class AzureBakeHandler extends CloudProviderBakeHandler{
     // https://github.com/mitchellh/packer/blob/master/builder/azure/arm/config.go#L45
     def azureImageName = parameterMap.azure_managed_image_name
     azureImageName = azureImageName.replaceAll(/[^A-Za-z0-9_\-\.]/, "")
-    azureImageName = azureImageName.length() <= 23 ? azureImageName : azureImageName.substring(0, 23)
+    azureImageName = azureImageName.length() <= 75 ? azureImageName : azureImageName.substring(0, 75)
     azureImageName = azureImageName.replaceAll(/[\-\.]+$/, "")
 
     parameterMap.azure_managed_image_name = azureImageName
