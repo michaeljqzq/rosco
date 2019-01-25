@@ -32,7 +32,8 @@ import java.time.Clock
 @Slf4j
 public class AzureBakeHandler extends CloudProviderBakeHandler{
 
-  private static final String IMAGE_NAME_TOKEN = "OSDiskUri:"
+  private static final String IMAGE_NAME_TOKEN = "ManagedImageName: "
+  private static final String IMAGE_ID_TOKEN = "ManagedImageId: "
 
   ImageNameFactory imageNameFactory = new ImageNameFactory()
 
@@ -63,9 +64,11 @@ public class AzureBakeHandler extends CloudProviderBakeHandler{
     // TODO(duftler): Presently scraping the logs for the image name. Would be better to not be reliant on the log
     // format not changing. Resolve this by storing bake details in redis.
     logsContent.eachLine { String line ->
-      if (line =~ IMAGE_NAME_TOKEN) {
-        imageName = line.split("/").last()
-        ami = "https:" + line.split(":").last()
+      if (line.startsWith(IMAGE_NAME_TOKEN)) {
+        imageName = line.substring(IMAGE_NAME_TOKEN.size())
+      }
+      if (line.startsWith(IMAGE_ID_TOKEN)) {
+        ami = line.substring(IMAGE_ID_TOKEN.size())
       }
     }
 
