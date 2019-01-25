@@ -25,9 +25,11 @@ import com.netflix.spinnaker.rosco.jobs.BakeRecipe
 import com.netflix.spinnaker.rosco.providers.util.ImageNameFactory
 import com.netflix.spinnaker.rosco.providers.util.PackageNameConverter
 import com.netflix.spinnaker.rosco.providers.util.PackerCommandFactory
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 
+@Slf4j
 abstract class CloudProviderBakeHandler {
 
   @Value('${rosco.configDir}')
@@ -189,7 +191,10 @@ abstract class CloudProviderBakeHandler {
 
     // Use both packages and artifacts to determine the version string and image name
     def appVersionStr = imageNameFactory.buildAppVersionStr(bakeRequest, osPackageNames + osArtifactNames, packageType)
+
+    log.info "[zhiqing ImageName] osPackageName=${osPackageNames.dump()} osArtifactNames=${osArtifactNames.dump()}"
     def imageName = imageNameFactory.buildImageName(bakeRequest, osPackageNames + osArtifactNames)
+    log.info "[zhiqing ImageName] imageName=${imageName}"
 
     // Don't include artifacts when constructing the packagesParameter, as artifacts will be passed
     // separately
